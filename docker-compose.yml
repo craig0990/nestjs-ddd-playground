@@ -1,0 +1,31 @@
+services:
+  app:
+    image: node:20
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+    working_dir: /usr/src/app
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db
+      - DB_PORT=1433
+      - DB_USER=sa
+      - DB_PASSWORD=yourStrong(!)Password
+      - DB_NAME=master
+    depends_on:
+      - db
+    command: npm run start:dev
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=yourStrong(!)Password
+    volumes:
+      - db_data:/var/opt/mssql
+
+volumes:
+  db_data:
