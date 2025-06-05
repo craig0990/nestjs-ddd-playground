@@ -1,18 +1,12 @@
-import {
-  CreatedConcern,
-  CreatedEmbed,
-  UpdatedConcern,
-  UpdatedEmbed,
-} from '../../../typeorm-concerns';
+import { AuditConcern } from 'src/shared/infrastructure/concerns/audit/audit.concern';
+import { AuditEmbed } from 'src/shared/infrastructure/concerns/audit/audit.embed';
 import { Column } from 'typeorm';
 
 /**
  * Common fields that expense claim reviews should have regardless of whether
  * they are escalated or not
  */
-export abstract class AbstractExpenseClaim
-  implements CreatedConcern, UpdatedConcern
-{
+export abstract class AbstractExpenseClaim implements AuditConcern {
   @Column({ type: 'uniqueidentifier' })
   employee_id: string;
 
@@ -25,9 +19,6 @@ export abstract class AbstractExpenseClaim
   @Column({ type: 'datetime' })
   submission_date: Date;
 
-  @Column(() => CreatedEmbed, { prefix: 'created' })
-  created: CreatedEmbed;
-
-  @Column(() => UpdatedEmbed, { prefix: 'updated' })
-  updated: UpdatedEmbed;
+  @Column(() => AuditEmbed, { prefix: false })
+  audit: AuditEmbed;
 }

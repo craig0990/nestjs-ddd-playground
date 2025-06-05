@@ -18,9 +18,9 @@ describe('isEmbed', () => {
   it('should return true if the entity has the embed', () => {
     expect(
       isEmbed(
+        new EntityWithEmbed(),
         'example',
         ExampleEmbed,
-        new EntityWithEmbed(),
         mock<EntityMetadata>({
           embeddeds: [
             {
@@ -36,9 +36,9 @@ describe('isEmbed', () => {
   it('should return false if the entity does not have the embed', () => {
     expect(
       isEmbed(
+        new EntityWithoutEmbed(),
         'example',
         ExampleEmbed,
-        new EntityWithoutEmbed(),
         mock<EntityMetadata>({
           embeddeds: [],
         }),
@@ -49,9 +49,9 @@ describe('isEmbed', () => {
   it('should return false if the entity is null or undefined', () => {
     expect(
       isEmbed(
+        null,
         'example',
         ExampleEmbed,
-        null,
         mock<EntityMetadata>({
           embeddeds: [],
         }),
@@ -60,9 +60,9 @@ describe('isEmbed', () => {
 
     expect(
       isEmbed(
+        undefined,
         'example',
         ExampleEmbed,
-        undefined,
         mock<EntityMetadata>({
           embeddeds: [],
         }),

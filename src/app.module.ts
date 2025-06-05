@@ -9,8 +9,8 @@ import { Thread } from './claims/infrastructure/entities/thread.entity';
 import { ExpenseClaim } from './claims/infrastructure/entities/expense_claim.entity';
 import { EscalatedLineItem } from './claims/infrastructure/entities/escalated_line_item';
 import { ExpenseClaimLineItem } from './claims/infrastructure/entities/expense_claim_line_item';
-import { TypeOrmConcernsModule } from './typeorm-concerns';
 import { SnakeCaseNamingStrategy } from './shared/infrastructure/snake_case_naming.strategy';
+import { AuditSubscriber } from './shared/infrastructure/concerns/audit/audit.subscriber';
 
 @Module({
   imports: [
@@ -43,10 +43,9 @@ import { SnakeCaseNamingStrategy } from './shared/infrastructure/snake_case_nami
         },
       }),
       inject: [ConfigService],
-    }),
-    TypeOrmConcernsModule.forRoot(),
+    })
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuditSubscriber],
 })
 export class AppModule {}
