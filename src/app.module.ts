@@ -3,9 +3,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClsModule } from 'nestjs-cls';
+import { Note } from './claims/infrastructure/entities/note.entity';
+import { Thread } from './claims/infrastructure/entities/thread.entity';
+import { ExpenseClaim } from './claims/infrastructure/entities/expense_claim.entity';
+import { EscalatedLineItem } from './claims/infrastructure/entities/escalated_line_item';
+import { ExpenseClaimLineItem } from './claims/infrastructure/entities/expense_claim_line_item';
+import { SnakeCaseNamingStrategy } from './shared/infrastructure/snake_case_naming.strategy';
+import { AuditSubscriber } from './shared/infrastructure/concerns/audit/audit.subscriber';
 
 @Module({
   imports: [
+    ClsModule.forRoot({
+      global: true,
+      middleware: { mount: true },
+    }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -16,16 +28,24 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [],
+        entities: [
+          ExpenseClaim,
+          EscalatedLineItem,
+          ExpenseClaimLineItem,
+          Thread,
+          Note,
+        ],
+        namingStrategy: new SnakeCaseNamingStrategy(),
         synchronize: true,
+        logging: true,
         options: {
           trustServerCertificate: true,
         },
       }),
       inject: [ConfigService],
-    }),
+    })
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuditSubscriber],
 })
 export class AppModule {}
